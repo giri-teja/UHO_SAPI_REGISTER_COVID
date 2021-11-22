@@ -1,0 +1,10 @@
+http:
+  port: "8081"
+
+database:
+  uhub:
+    url: "jdbc:postgresql://ec2-44-194-232-228.compute-1.amazonaws.com:5432/df1q1qthrurd3t?sslmode=require"
+    driver: "org.postgresql.Driver"
+    user: "hfwegdqkijfbyf"
+    password: "![q589eQHgGhyGWSVBT/Fn3O5W8d+NNQxJQUKuFtFMgKFvPavBpfl4g6FCxNI/X/2gk9en5YOLCKFYRwwhKmLquNHqOIYMndmb0Z/YvPCpiKg=]"
+ 

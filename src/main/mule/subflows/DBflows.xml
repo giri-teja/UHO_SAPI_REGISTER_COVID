@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<sub-flow name="Register_Covid_Case_INSERT" doc:id="b0fb47cf-f3d2-42c2-9293-1f44d6b389bc" >
+		<logger level="INFO" doc:name="Logger" doc:id="3ef35960-2458-423a-9eeb-bea24a971bb3" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Before insert case database call", payload: #[payload]'/>
+		<db:insert doc:name="Insert" doc:id="5ffef63e-e7d9-4e16-bfbb-3c15ed3baa06" config-ref="Database_Config_Heroku_cloud_covid" autoGenerateKeys="true">
+			<reconnect />
+			<db:sql><![CDATA[insert into cvd_case_master(source, case_type, first_name, last_name, phone, email, date_of_birth, national_id, national_id_type, street_address, city, state, postal, country, create_date, update_date, created_by, updated_by) values(:source, :case_type, :first_name, :last_name, :phone, :email, TO_DATE(:date_of_birth, 'YYYY-MM-DD'), :national_id, :national_id_type, :street_address, :city, :state, :postal, :country, TO_DATE(:create_date, 'YYYY-MM-DD'), TO_DATE(:update_date, 'YYYY-MM-DD'), :created_by, :updated_by)]]></db:sql>
+			<db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
+			<db:auto-generated-keys-column-names>
+				<db:auto-generated-keys-column-name value="national_id" />
+			</db:auto-generated-keys-column-names>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="30e36221-c6eb-40e1-a67d-a20edd4bfc8b" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Response From Database", payload: #[payload]'/>
+	</sub-flow>
+</mule>

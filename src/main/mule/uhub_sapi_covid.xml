@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <apikit:config name="uhub_sapi_covid-config" api="uhub_sapi_covid.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="uhub_sapi_covid-main">
+        <http:listener config-ref="uhub_sapi_covid-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <set-variable value="#[attributes.headers.'x-transaction-id' default uuid()]" doc:name="Set Variable" doc:id="29d74795-a205-4a19-9e8c-9f2bb8d852a4" variableName="transaction_id" />
+        <apikit:router config-ref="uhub_sapi_covid-config" />
+        <error-handler ref="global_error_handler" />
+    </flow>
+    <flow name="uhub_sapi_covid-console">
+        <http:listener config-ref="uhub_sapi_covid-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="uhub_sapi_covid-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\cases:application\json:uhub_sapi_covid-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  example: "{\r\n   \"caseID\":\"672322\"\r\n}",
+  "type": "uhub-sapi-type.covid-case-response-type"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\health-check:uhub_sapi_covid-config">
+        <logger level="INFO" message="get:\health-check:uhub_sapi_covid-config" />
+    </flow>
+    <flow name="get:\reports:uhub_sapi_covid-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    state: "texas",
+    report: {
+      total: 46744,
+      positive: 436744,
+      recovered: 433744,
+      death: 300,
+      vaccinated: 7847848
+    }
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\cases\(nationalID):uhub_sapi_covid-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+            <ee:variables>
+                <ee:set-variable variableName="nationalID">attributes.uriParams.'nationalID'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    source: "Hospital1",
+    caseID: "456464",
+    caseType: "positive",
+    firstName: "John",
+    lastName: "Nixon",
+    phone: "541-754-3010",
+    email: "john@gmail.com",
+    dateOfBirth: "1989-04-26",
+    nationalID: "209-49-6193",
+    nationalIDType: "SSN",
+    address: {
+      streetAddress: "1600 Pennsylvania Avenue NW",
+      city: "Washington",
+      state: "DC",
+      postal: "20500",
+      country: "USA"
+    },
+    createDate: "2021-05-03",
+    updateDate: "2021-05-03"
+  }, 
+  {
+    source: "Hospital1",
+    caseID: "528293",
+    caseType: "negative",
+    firstName: "John",
+    lastName: "Nixon",
+    phone: "541-754-3010",
+    email: "john@gmail.com",
+    dateOfBirth: "1989-04-26",
+    nationalID: "209-49-6193",
+    nationalIDType: "SSN",
+    address: {
+      streetAddress: "1600 Pennsylvania Avenue NW",
+      city: "Washington",
+      state: "DC",
+      postal: "20500",
+      country: "USA"
+    },
+    createDate: "2020-12-14",
+    updateDate: "2020-12-14"
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>
