@@ -16,5 +16,6 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 		<db:generic-connection url="${secure::database.uhub.url}" driverClassName="${secure::database.uhub.driver}" user="${secure::database.uhub.user}" password="${secure::database.uhub.password}" />
 	</db:config>
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="a857c30e-9698-49e9-abe2-b705ea5a9f6a" file="${env}.yaml" key="${enc.key}" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="0e2cfbd9-f82c-498a-9a0b-3f73c80181b7" flowRef="uhub_sapi_covid-main" />
 	
 </mule>
