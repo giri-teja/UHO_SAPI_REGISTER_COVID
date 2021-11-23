@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 	<flow name="post:\cases:application\json:uhub_sapi_covid-config" doc:id="9b11a1b1-aac5-42cc-b82a-b97464327efa" >
 		<set-variable value="#[attributes.headers.'x-correlation-id' default &quot;&quot;]" doc:name="Set corelatiod_id" doc:id="a93d3578-70ac-4c3b-a062-220545d98864" variableName="correlation_Id"/>
-		<logger level="INFO" doc:name="Logger" doc:id="d2fc36fb-496f-4c7f-9c03-74589a8daba5" message="transactionID: #[vars.transaction_Id]], correlationID: #[vars.correlation_ID], message: Started register covid case flow, payload: #[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d2fc36fb-496f-4c7f-9c03-74589a8daba5" message="transactionID: #[vars.transaction_id]], correlationID: #[vars.correlation_Id], message: Started register covid case flow, payload: #[payload]"/>
 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -40,7 +40,7 @@ var currentDate = now() as String { format: "yyyy-MM-dd" }
 ]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="3a551971-72a0-4d6b-800e-9a957a5ed468" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Details for the registration", payload: #[payload]'/>
+		<logger level="INFO" doc:name="Logger" doc:id="3a551971-72a0-4d6b-800e-9a957a5ed468" message='transactionID: #[vars.transaction_id]], correlationID: #[vars.correlation_Id], message: "Details for the registration", payload: #[payload]'/>
 		<flow-ref doc:name="Call_DB_Flow" doc:id="76ece804-c9a1-4b41-92bd-a10fa426b58c" name="Register_Covid_Case_INSERT" />
 		<ee:transform doc:name="Transform Message" doc:id="ed6e66fb-1b5d-4db3-a1f4-3086e1e899e8" >
 			<ee:message >
@@ -52,6 +52,6 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="6aa9af11-72a0-43c1-8910-fa0ca20029d4" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Registration of covid case is completed", payload: #[payload]'/>
+		<logger level="INFO" doc:name="Logger" doc:id="6aa9af11-72a0-43c1-8910-fa0ca20029d4" message='transactionID: #[vars.transaction_id]], correlationID: #[vars.correlation_Id], message: "Registration of covid case is completed", payload: #[payload]'/>
 	</flow>
 </mule>
