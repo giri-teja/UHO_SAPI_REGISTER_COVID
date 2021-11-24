@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mycompany</groupId>
 	<artifactId>uhub_sapi</artifactId>
@@ -77,10 +75,12 @@
 						</properties>
 					</cloudHubDeployment>
 					<!-- CloudHubDeployment -->
+					<!-- <sharedLibraries> <sharedLibrary> <groupId>com.mycompany</groupId> 
+						<artifactId>postgresql-42.2.19</artifactId> </sharedLibrary> </sharedLibraries> -->
 					<sharedLibraries>
 						<sharedLibrary>
-							<groupId>com.mycompany</groupId>
-							<artifactId>postgresql-42.2.19</artifactId>
+							<groupId>org.postgresql</groupId>
+							<artifactId>postgresql</artifactId>
 						</sharedLibrary>
 					</sharedLibraries>
 				</configuration>
@@ -123,6 +123,11 @@
 			<artifactId>mule-secure-configuration-property-module</artifactId>
 			<version>1.2.3</version>
 			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.19</version>
 		</dependency>
 	</dependencies>
 	<repositories>
