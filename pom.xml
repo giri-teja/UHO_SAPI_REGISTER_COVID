@@ -77,12 +77,6 @@
 						</properties>
 					</cloudHubDeployment>
 					<!-- CloudHubDeployment -->
-					<sharedLibraries>
-						<sharedLibrary>
-							<groupId>com.mycompany</groupId>
-							<artifactId>postgresql-42.2.19</artifactId>
-						</sharedLibrary>
-					</sharedLibraries>
 				</configuration>
 			</plugin>
 		</plugins>
